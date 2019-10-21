@@ -36,26 +36,29 @@ class Depdump
 
       case node.type
       when :class, :module
+        defined_namespaces = []
         definition_node = node.children.first
+
         if definition_node.type == :const
-          detected_namespaces = trace_definitions(definition_node, namespaces)
-          @classes << detected_namespaces
+          defined_namespaces = expand_const_namespaces(definition_node, namespaces)
+          @classes << defined_namespaces
         end
-        node.children[1..-1].each { |n| trace_node(n, detected_namespaces) }
+
+        node.children[1..-1].each { |n| trace_node(n, defined_namespaces) }
       when :const
-        constant_namespaces = trace_definitions(node, [])
-        @relations << { from: namespaces, to: constant_namespaces }
+        referenced_namespaces = expand_const_namespaces(node, [])
+        @relations << { from: namespaces, to: referenced_namespaces }
       else
         node.children.map { |n| trace_node(n, namespaces) }
       end
     end
 
-    def trace_definitions(node, namespaces)
+    def expand_const_namespaces(node, namespaces)
       valid_definition = node.respond_to?(:type) && node.type == :const
       return namespaces unless valid_definition
 
       maybe_qualifing_node = node.children.first
-      qualified_namespaces = trace_definitions(maybe_qualifing_node, namespaces)
+      qualified_namespaces = expand_const_namespaces(maybe_qualifing_node, namespaces)
       qualified_namespaces + [node.children.last]
     end
 
