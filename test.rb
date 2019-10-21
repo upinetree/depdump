@@ -14,7 +14,10 @@ class TestFoo < MiniTest::Unit::TestCase
       end
     SRC
 
-    expected = { classes: [[:A]] }
+    expected = {
+      classes: [[:A]],
+      relations: []
+    }
     assert_equal expected, @client.parse_text(@source)
   end
 
@@ -40,7 +43,10 @@ class TestFoo < MiniTest::Unit::TestCase
       end
     SRC
 
-    expected = { classes: [[:A], [:B]] }
+    expected = {
+      classes: [[:A], [:B]],
+      relations: [{ from: [:A], to: [:B] }]
+    }
     assert_equal expected, @client.parse_text(@source)
   end
 
@@ -63,7 +69,10 @@ class TestFoo < MiniTest::Unit::TestCase
       end
     SRC
 
-    expected = { classes: [[:A], [:A, :B], [:A, :B, :C]] }
+    expected = {
+      classes: [[:A], [:A, :B], [:A, :B, :C]],
+      relations: [{ from: [:A], to: [:A, :B] }]
+    }
     assert_equal expected, @client.parse_text(@source)
   end
 
@@ -83,7 +92,10 @@ class TestFoo < MiniTest::Unit::TestCase
       end
     SRC
 
-    expected = { classes: [[:A], [:A, :B, :C]] }
+    expected = {
+      classes: [[:A], [:A, :B, :C]],
+      relations: [{ from: [:A], to: [:A, :B] }]
+    }
     assert_equal expected, @client.parse_text(@source)
   end
 
@@ -103,7 +115,10 @@ class TestFoo < MiniTest::Unit::TestCase
       end
     SRC
 
-    expected = { classes: [[:A], [:A, :B, :C]] }
+    expected = {
+      classes: [[:A], [:A, :B, :C]],
+      relations: [{ from: [:A], to: [:A, :B] }]
+    }
     assert_equal expected, @client.parse_text(@source)
   end
 end

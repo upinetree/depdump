@@ -9,13 +9,20 @@ class Depdump
   private
 
   class Tracer
+    attr_reader :classes, :relations
+
     def self.run(ast)
-      classes_set = new.trace_node(ast)
-      { classes: classes_set.to_a }
+      tracer = new.tap { |t| t.trace_node(ast) }
+
+      {
+        classes: tracer.classes.to_a,
+        relations: tracer.relations.to_a
+      }
     end
 
     def initialize
       @classes = Set.new
+      @relations = Set.new
     end
 
     def trace_node(node, namespaces = [])
@@ -35,11 +42,12 @@ class Depdump
           @classes << detected_namespaces
         end
         node.children[1..-1].each { |n| trace_node(n, detected_namespaces) }
+      when :const
+        constant_namespaces = trace_definitions(node, [])
+        @relations << { from: namespaces, to: constant_namespaces }
       else
         node.children.map { |n| trace_node(n, namespaces) }
       end
-
-      @classes.to_a
     end
 
     def trace_definitions(node, namespaces)
