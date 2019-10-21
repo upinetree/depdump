@@ -1,11 +1,9 @@
-require_relative './depdump'
 require 'minitest/autorun'
+require 'depdump'
 
-MiniTest::Unit.autorun
-
-class TestFoo < MiniTest::Unit::TestCase
+class TestParseText < MiniTest::Unit::TestCase
   def setup
-    @client = Depdump.new
+    @client = ::Depdump.new
   end
 
   def test_blank_class
