@@ -70,7 +70,7 @@ class Depdump
     end
 
     def with_debug
-      return unless ENV['DEBUG']
+      return unless ENV["DEBUG"]
       yield
     end
   end

@@ -1,5 +1,5 @@
-require 'minitest/autorun'
-require 'depdump'
+require "minitest/autorun"
+require "depdump"
 
 class TestTracer < MiniTest::Unit::TestCase
   def setup

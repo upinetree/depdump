@@ -1,5 +1,5 @@
-require 'minitest/autorun'
-require 'depdump'
+require "minitest/autorun"
+require "depdump"
 
 class TestParseText < MiniTest::Unit::TestCase
   def setup
@@ -14,7 +14,7 @@ class TestParseText < MiniTest::Unit::TestCase
 
     expected = {
       classes: [[:A]],
-      relations: []
+      relations: [],
     }
     assert_equal expected, @client.parse_text(@source)
   end
@@ -37,7 +37,7 @@ class TestParseText < MiniTest::Unit::TestCase
 
     expected = {
       classes: [[:A], [:B]],
-      relations: [{ from: [:A], to: [:B] }]
+      relations: [{ from: [:A], to: [:B] }],
     }
     assert_equal expected, @client.parse_text(@source)
   end
@@ -56,7 +56,7 @@ class TestParseText < MiniTest::Unit::TestCase
 
     expected = {
       classes: [[:A]],
-      relations: []
+      relations: [],
     }
     assert_equal expected, @client.parse_text(@source)
   end
@@ -87,8 +87,8 @@ class TestParseText < MiniTest::Unit::TestCase
       classes: [[:A], [:A, :B], [:A, :B, :C]],
       relations: [
         { from: [:A], to: [:A, :B] },
-        { from: [:A, :B], to: [:B, :C] }
-      ]
+        { from: [:A, :B], to: [:B, :C] },
+      ],
     }
     assert_equal expected, @client.parse_text(@source)
   end
@@ -111,7 +111,7 @@ class TestParseText < MiniTest::Unit::TestCase
 
     expected = {
       classes: [[:A], [:A, :B, :C]],
-      relations: [{ from: [:A], to: [:A, :B] }]
+      relations: [{ from: [:A], to: [:A, :B] }],
     }
     assert_equal expected, @client.parse_text(@source)
   end
@@ -134,7 +134,7 @@ class TestParseText < MiniTest::Unit::TestCase
 
     expected = {
       classes: [[:A], [:A, :B, :C]],
-      relations: [{ from: [:A], to: [:A, :B] }]
+      relations: [{ from: [:A], to: [:A, :B] }],
     }
     assert_equal expected, @client.parse_text(@source)
   end
@@ -150,7 +150,7 @@ class TestParseText < MiniTest::Unit::TestCase
 
     expected = {
       classes: [[:A]],
-      relations: [{ from: [:A], to: [:B] }]
+      relations: [{ from: [:A], to: [:B] }],
     }
     assert_equal expected, @client.parse_text(@source)
   end
@@ -164,7 +164,7 @@ class TestParseText < MiniTest::Unit::TestCase
 
     expected = {
       classes: [[:A]],
-      relations: [{ from: [:A], to: [:B] }]
+      relations: [{ from: [:A], to: [:B] }],
     }
     assert_equal expected, @client.parse_text(@source)
   end
@@ -178,7 +178,7 @@ class TestParseText < MiniTest::Unit::TestCase
 
     expected = {
       classes: [[:A]],
-      relations: [{ from: [:A], to: [:B] }]
+      relations: [{ from: [:A], to: [:B] }],
     }
     assert_equal expected, @client.parse_text(@source)
   end
