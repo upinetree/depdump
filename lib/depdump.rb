@@ -1,6 +1,6 @@
-require "depdump/registry_tree"
-require "depdump/tracer"
-require "depdump/version"
+require_relative "depdump/registry_tree"
+require_relative "depdump/tracer"
+require_relative "depdump/version"
 
 require "parser/current"
 
