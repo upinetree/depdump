@@ -6,7 +6,7 @@ class TestTracer < MiniTest::Unit::TestCase
     @tracer = ::Depdump::Tracer.new
   end
 
-  def test_registry_tree_generation
+  def test_trace_node_generates_registry_tree
     nested_class_source = <<~SRC
       class A
         def hello
@@ -64,7 +64,7 @@ class TestTracer < MiniTest::Unit::TestCase
     assert_equal 0, node_d.relations.size
   end
 
-  def test_resolve_relations
+  def test_resolve_relations_set_collect_references
     nested_class_source = <<~SRC
       class A
         def hello
