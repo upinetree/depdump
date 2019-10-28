@@ -38,9 +38,9 @@ class TestTracer < MiniTest::Unit::TestCase
 
     @tracer.trace_node(ast)
 
-    assert_equal 1, @tracer.registry.root.children.size
+    assert_equal 1, @tracer.registry_tree.root.children.size
 
-    node_a = @tracer.registry.root.children.first
+    node_a = @tracer.registry_tree.root.children.first
     assert_equal [:A], node_a.namespaces
     assert_equal 2, node_a.children.size
     assert_equal 1, node_a.relations.size

@@ -1,6 +1,6 @@
 class Depdump
   class Tracer
-    attr_reader :classes, :relations, :registry
+    attr_reader :classes, :relations, :registry_tree
 
     def self.run(ast)
       tracer = new.tap { |t| t.trace_node(ast) }
@@ -16,8 +16,8 @@ class Depdump
     def initialize
       @classes = Set.new
       @relations = Set.new
-      @registry = RegistryTree.new
-      @context = @registry.root
+      @registry_tree = RegistryTree.new
+      @context = @registry_tree.root
     end
 
     def trace_node(node, namespaces = [])
@@ -28,12 +28,11 @@ class Depdump
         defined_namespaces = []
         definition_node = node.children.first
 
-        stack_context do
-          # definition_node.type should be :const (otherwise syntax error occurs)
-          defined_namespaces = expand_const_namespaces(definition_node, namespaces)
-          @classes << defined_namespaces
-          @context.namespaces = defined_namespaces
+        # definition_node.type should be :const (otherwise syntax error occurs)
+        defined_namespaces = expand_const_namespaces(definition_node, namespaces)
+        @classes << defined_namespaces
 
+        stack_context(defined_namespaces) do
           node.children[1..-1].each { |n| trace_node(n, defined_namespaces) }
         end
       when :const
@@ -45,14 +44,14 @@ class Depdump
     end
 
     def resolve_relations
-      @relations.each { |r| r.resolve(@registry) }
+      @relations.each { |r| r.resolve(@registry_tree) }
     end
 
     private
 
-    def stack_context
+    def stack_context(namespaces)
       prev_context = @context
-      @context = @registry.create_node(parent: prev_context)
+      @context = @registry_tree.create_node(namespaces, prev_context)
 
       yield
 

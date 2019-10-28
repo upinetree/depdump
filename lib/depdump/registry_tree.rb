@@ -40,10 +40,6 @@ class Depdump
       end
     end
 
-    def initialize
-      @nodes = []
-    end
-
     def root
       @root ||= Node.new(
         namespaces: [:Object], # Const object ?
@@ -51,9 +47,8 @@ class Depdump
       )
     end
 
-    def create_node(parent:)
-      Node.new(parent: parent).tap { |n|
-        @nodes << n
+    def create_node(namespaces, parent)
+      Node.new(namespaces: namespaces, parent: parent).tap { |n|
         parent.children << n
       }
     end
