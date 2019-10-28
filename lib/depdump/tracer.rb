@@ -16,7 +16,7 @@ class Depdump
     def initialize
       @classes = Set.new
       @relations = Set.new
-      @registry_tree = RegistryTree.new
+      @registry_tree = Registry::Tree.new
       @context = @registry_tree.root
     end
 

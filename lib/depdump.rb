@@ -1,4 +1,4 @@
-require_relative "depdump/registry_tree"
+require_relative "depdump/registry"
 require_relative "depdump/tracer"
 require_relative "depdump/version"
 
