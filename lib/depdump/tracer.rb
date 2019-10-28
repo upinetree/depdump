@@ -29,11 +29,10 @@ class Depdump
         definition_node = node.children.first
 
         stack_context do
-          if definition_node.type == :const
-            defined_namespaces = expand_const_namespaces(definition_node, namespaces)
-            @classes << defined_namespaces
-            @context.namespaces = defined_namespaces
-          end
+          # definition_node.type should be :const (otherwise syntax error occurs)
+          defined_namespaces = expand_const_namespaces(definition_node, namespaces)
+          @classes << defined_namespaces
+          @context.namespaces = defined_namespaces
 
           node.children[1..-1].each { |n| trace_node(n, defined_namespaces) }
         end
