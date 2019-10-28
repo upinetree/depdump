@@ -63,42 +63,4 @@ class TestTracer < MiniTest::Unit::TestCase
     assert_equal 0, node_d.children.size
     assert_equal 0, node_d.relations.size
   end
-
-  def test_resolve_relations_set_collect_references
-    nested_class_source = <<~SRC
-      class A
-        def hello
-          p 'hello, '
-          A::B.new.world
-        end
-
-        class B
-          def world
-            B::C.new.say
-            D.new.say
-          end
-
-          class C
-            def say
-              p 'world'
-            end
-          end
-        end
-
-        class D
-          def say
-            p '!!'
-          end
-        end
-      end
-    SRC
-    ast = Parser::CurrentRuby.parse(nested_class_source)
-
-    @tracer.trace_node(ast)
-    @tracer.resolve_relations
-
-    assert_equal [:A, :B], @tracer.relations.to_a[0].resolved_reference
-    assert_equal [:A, :B, :C], @tracer.relations.to_a[1].resolved_reference
-    assert_equal [:A, :D], @tracer.relations.to_a[2].resolved_reference
-  end
 end

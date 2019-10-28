@@ -14,6 +14,11 @@ class Depdump
         }
       end
 
+      def each_node
+        return unless block_given?
+        root.each { |node| yield node }
+      end
+
       def resolve(partial_namespaces, entry_node, except_node: nil)
         found = entry_node.search_down(partial_namespaces, except: except_node)
 

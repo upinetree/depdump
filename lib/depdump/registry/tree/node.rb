@@ -18,6 +18,19 @@ class Depdump
           }
         end
 
+        def key
+          namespaces.map(&:downcase).join("/")
+        end
+
+        def each(&block)
+          return unless block_given?
+
+          children.each do |child|
+            yield child
+            child.each(&block)
+          end
+        end
+
         def search_down(partial_namespaces, except: nil)
           nest_size = partial_namespaces.size
           return self if partial_namespaces == namespaces.last(nest_size)

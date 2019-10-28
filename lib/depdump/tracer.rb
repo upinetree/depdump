@@ -4,18 +4,15 @@ class Depdump
 
     def self.run(ast)
       tracer = new.tap { |t| t.trace_node(ast) }
+      graph = tracer.build_dependency_graph
 
       {
-        classes: tracer.classes.to_a,
-        relations: tracer.relations.map { |r|
-          { from: r.node.namespaces, to: r.reference }
-        },
+        nodes: graph.nodes.values,
+        edges: graph.edges,
       }
     end
 
     def initialize
-      @classes = Set.new
-      @relations = Set.new
       @registry_tree = Registry::Tree.new
       @context = @registry_tree.root
     end
@@ -25,26 +22,24 @@ class Depdump
 
       case node.type
       when :class, :module
-        defined_namespaces = []
         definition_node = node.children.first
 
         # definition_node.type should be :const (otherwise syntax error occurs)
         defined_namespaces = expand_const_namespaces(definition_node, namespaces)
-        @classes << defined_namespaces
 
         stack_context(defined_namespaces) do
           node.children[1..-1].each { |n| trace_node(n, defined_namespaces) }
         end
       when :const
         referenced_namespaces = expand_const_namespaces(node, [])
-        @relations << @context.create_relation(referenced_namespaces)
+        @context.create_relation(referenced_namespaces)
       else
         node.children.map { |n| trace_node(n, namespaces) }
       end
     end
 
-    def resolve_relations
-      @relations.each { |r| r.resolve(@registry_tree) }
+    def build_dependency_graph
+      DependencyGraph.new(@registry_tree)
     end
 
     private
