@@ -195,4 +195,19 @@ class TestParseText < MiniTest::Unit::TestCase
     }
     assert_equal expected, @client.parse_text(@source)
   end
+
+  def test_inheritance
+    @source = <<~SRC
+      class A
+      end
+      class A::B < A
+      end
+    SRC
+
+    expected = {
+      nodes: [[:A], [:A, :B]],
+      edges: [{ from: [:A, :B], to: [:A] }],
+    }
+    assert_equal expected, @client.parse_text(@source)
+  end
 end
