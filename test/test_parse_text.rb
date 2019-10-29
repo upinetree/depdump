@@ -153,14 +153,16 @@ class TestParseText < MiniTest::Unit::TestCase
     @source = <<~SRC
       module A
         def hello
-          ::B.new.world
+          ::B.new
         end
+
+        class B; end
       end
       class B; end
     SRC
 
     expected = {
-      nodes: [[:A], [:B]],
+      nodes: [[:A], [:A, :B], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
     assert_equal expected, @client.parse_text(@source)

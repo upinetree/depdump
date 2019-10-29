@@ -6,7 +6,11 @@ class Depdump
 
         def initialize(node:, reference:)
           @node = node
-          @reference = reference
+          @reference = retrieve_top_level(reference)
+        end
+
+        def retrieve_top_level(reference)
+          reference.map { |const| const || :Object }
         end
 
         def resolve(tree)

@@ -53,8 +53,9 @@ class Depdump
       @context = prev_context
     end
 
+    # returns [nil] if node.type is :cbase
     def expand_const_namespaces(node, namespaces)
-      valid_definition = node.respond_to?(:type) && node.type == :const
+      valid_definition = node.respond_to?(:type) && [:const, :cbase].include?(node.type)
       return namespaces unless valid_definition
 
       maybe_qualifing_node = node.children.first

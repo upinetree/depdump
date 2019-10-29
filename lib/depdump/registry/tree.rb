@@ -3,7 +3,7 @@ class Depdump
     class Tree
       def root
         @root ||= Node.new(
-          namespaces: [:Object], # Const object ?
+          namespaces: [:Object],
           parent: nil,
         )
       end

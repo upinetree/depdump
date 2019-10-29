@@ -18,6 +18,10 @@ class Depdump
           }
         end
 
+        def root?
+          parent.nil? && namespaces == [:Object]
+        end
+
         def key
           namespaces.map(&:downcase).join("/")
         end
@@ -32,8 +36,8 @@ class Depdump
         end
 
         def search_down(partial_namespaces, except: nil)
-          nest_size = partial_namespaces.size
-          return self if partial_namespaces == namespaces.last(nest_size)
+          return self if partial_namespaces == namespaces.last(partial_namespaces.size)
+          return self if parent&.root? && partial_namespaces == ([:Object] + namespaces) # top level refenrece
 
           searchable_children = except ? children.reject { |node| node.namespaces == except.namespaces } : children
           searchable_children.detect { |n| n.search_down(partial_namespaces) }
