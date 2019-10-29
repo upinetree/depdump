@@ -11,7 +11,7 @@ class Depdump
 
         def resolve(tree)
           resolved_node = tree.resolve(reference, node)
-          resolved_node.namespaces
+          resolved_node&.namespaces
         end
       end
     end
