@@ -32,7 +32,7 @@ class Depdump
 
     def stack_context(namespaces)
       prev_context = @context
-      @context = @registry_tree.create_node(namespaces, prev_context)
+      @context = @registry_tree.find_or_create_node(namespaces, prev_context)
 
       yield
 

@@ -8,7 +8,11 @@ class Depdump
         )
       end
 
-      def create_node(namespaces, parent)
+      def find_or_create_node(namespaces, parent)
+        # TODO: could be cached rather than search everytime
+        registered = root.search_down(parent.namespaces + namespaces)
+        return registered if registered
+
         Node.new(namespaces: namespaces, parent: parent).tap { |n|
           parent.children << n
         }
