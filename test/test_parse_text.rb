@@ -212,4 +212,19 @@ class TestParseText < MiniTest::Unit::TestCase
     }
     assert_equal expected, @client.parse_text(@source)
   end
+
+  def test_class_level_references
+    @source = <<~SRC
+      class A
+        B.new
+      end
+      class B; end
+    SRC
+
+    expected = {
+      nodes: [[:A], [:B]],
+      edges: [{ from: [:A], to: [:B] }],
+    }
+    assert_equal expected, @client.parse_text(@source)
+  end
 end
