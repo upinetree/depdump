@@ -1,7 +1,6 @@
 require "minitest/autorun"
 require "depdump"
 
-# TODO: 継承、クラスレベルの評価のテスト
 class TestParseText < MiniTest::Unit::TestCase
   def setup
     @client = ::Depdump.new
