@@ -227,4 +227,23 @@ class TestParseText < MiniTest::Unit::TestCase
     }
     assert_equal expected, @client.parse_text(@source)
   end
+
+  # TODO: This is just a limitation. For resolve this problem,
+  #       Tracer should have functionality of handling :casgn expression
+  def test_const_definition_isnt_supported
+    @source = <<~SRC
+      class A
+        B = 1
+      end
+      class C
+        D = A::B
+      end
+    SRC
+
+    expected = {
+      nodes: [[:A], [:C]],
+      edges: [],
+    }
+    assert_equal expected, @client.parse_text(@source)
+  end
 end
