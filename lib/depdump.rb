@@ -6,9 +6,21 @@ require_relative "depdump/version"
 require "parser/current"
 
 class Depdump
-  def run(file)
-    source = File.read(file)
-    parse_string(source)
+  def run(files)
+    tracer = Tracer.new
+
+    files.each do |file|
+      source = File.read(file)
+      ast = Parser::CurrentRuby.parse(source)
+      tracer.trace_node(ast)
+    end
+
+    graph = DependencyGraph.new(tracer.registry_tree)
+
+    {
+      nodes: graph.nodes.values,
+      edges: graph.edges.to_a,
+    }
   end
 
   def parse_string(source)
