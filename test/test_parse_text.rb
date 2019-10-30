@@ -16,7 +16,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A]],
       edges: [],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_flat_relation_classes
@@ -39,7 +39,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_reopened_class
@@ -67,7 +67,7 @@ class TestParseText < MiniTest::Unit::TestCase
         { from: [:A], to: [:C] },
       ],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_nested_class
@@ -99,7 +99,7 @@ class TestParseText < MiniTest::Unit::TestCase
         { from: [:A, :B], to: [:A, :B, :C] },
       ],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_qualified_class
@@ -122,7 +122,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:A, :B, :C]],
       edges: [{ from: [:A], to: [:A, :B, :C] }],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_class_qualified_with_module
@@ -145,7 +145,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:A, :B, :C]],
       edges: [{ from: [:A], to: [:A, :B, :C] }],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_refenrence_of_top_level_const
@@ -164,7 +164,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:A, :B], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_included_module
@@ -179,7 +179,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_extended_class
@@ -194,7 +194,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_inheritance
@@ -209,7 +209,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:A, :B]],
       edges: [{ from: [:A, :B], to: [:A] }],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   def test_class_level_references
@@ -224,7 +224,7 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 
   # TODO: This is just a limitation. For resolve this problem,
@@ -243,6 +243,6 @@ class TestParseText < MiniTest::Unit::TestCase
       nodes: [[:A], [:C]],
       edges: [],
     }
-    assert_equal expected, @client.parse_text(@source)
+    assert_equal expected, @client.parse_string(@source)
   end
 end

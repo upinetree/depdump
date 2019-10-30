@@ -2,16 +2,6 @@ class Depdump
   class Tracer
     attr_reader :classes, :relations, :registry_tree
 
-    def self.run(ast)
-      tracer = new.tap { |t| t.trace_node(ast) }
-      graph = tracer.build_dependency_graph
-
-      {
-        nodes: graph.nodes.values,
-        edges: graph.edges,
-      }
-    end
-
     def initialize
       @registry_tree = Registry::Tree.new
       @context = @registry_tree.root
@@ -36,10 +26,6 @@ class Depdump
       else
         node.children.map { |n| trace_node(n, namespaces) }
       end
-    end
-
-    def build_dependency_graph
-      DependencyGraph.new(@registry_tree)
     end
 
     private
