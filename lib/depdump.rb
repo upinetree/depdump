@@ -19,7 +19,7 @@ class Depdump
 
     {
       nodes: graph.nodes.values,
-      edges: graph.edges,
+      edges: graph.edges.to_a,
     }
   end
 end

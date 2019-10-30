@@ -3,7 +3,7 @@ class DependencyGraph
 
   def initialize(tree)
     @nodes = {}
-    @edges = []
+    @edges = Set.new
     build(tree)
   end
 
