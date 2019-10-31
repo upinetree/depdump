@@ -1,12 +1,20 @@
 require_relative "depdump/registry"
 require_relative "depdump/tracer"
 require_relative "depdump/dependency_graph"
+require_relative "depdump/configurable"
 require_relative "depdump/version"
 
 require "parser/current"
 
 class Depdump
+  include Configurable
+
   def run(files)
+    graph = parse_files(files)
+    config.output.write(graph.format)
+  end
+
+  def parse_files(files)
     tracer = Tracer.new
 
     files.each do |file|
@@ -15,12 +23,7 @@ class Depdump
       tracer.trace_node(ast)
     end
 
-    graph = DependencyGraph.new(tracer.registry_tree)
-
-    {
-      nodes: graph.nodes.values,
-      edges: graph.edges.to_a,
-    }
+    DependencyGraph.new(tracer.registry_tree)
   end
 
   def parse_string(source)

@@ -1,3 +1,5 @@
+require "json"
+
 class Depdump
   class DependencyGraph
     attr_reader :nodes, :edges
@@ -14,8 +16,16 @@ class Depdump
         node.relations.each do |r|
           referenced_namespaces = r.resolve(tree)
           @edges << { from: node.namespaces, to: referenced_namespaces } if referenced_namespaces
+          # TODO: log references failed to resolve
         end
       end
+    end
+
+    def format
+      JSON.dump({
+        nodes: nodes.values,
+        edges: edges.to_a,
+      })
     end
   end
 end
