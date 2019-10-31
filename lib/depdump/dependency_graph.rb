@@ -15,8 +15,11 @@ class Depdump
         @nodes[node.key] ||= node.namespaces
         node.relations.each do |r|
           referenced_namespaces = r.resolve(tree)
-          @edges << { from: node.namespaces, to: referenced_namespaces } if referenced_namespaces
-          # TODO: log references failed to resolve
+          if referenced_namespaces
+            @edges << { from: node.namespaces, to: referenced_namespaces }
+          else
+            warn "[skip] cannot resolve: #{node.namespaces} => #{r.reference}"
+          end
         end
       end
     end
