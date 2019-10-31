@@ -48,10 +48,5 @@ class Depdump
       qualified_namespaces = expand_const_namespaces(maybe_qualifing_node, namespaces)
       qualified_namespaces + [node.children.last]
     end
-
-    def with_debug
-      return unless ENV["DEBUG"]
-      yield
-    end
   end
 end
