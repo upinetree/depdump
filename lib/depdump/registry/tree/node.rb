@@ -2,6 +2,8 @@ class Depdump
   class Registry
     class Tree
       class Node
+        include Enumerable
+
         attr_accessor :namespaces
         attr_reader :children, :parent, :relations
 
@@ -35,12 +37,13 @@ class Depdump
           end
         end
 
-        def search_down(partial_namespaces, except: nil)
+        def search_kinship(partial_namespaces, except: nil, degree: 1)
           return self if partial_namespaces == namespaces.last(partial_namespaces.size)
           return self if parent&.root? && partial_namespaces == ([:Object] + namespaces) # top level refenrece
+          return unless degree > 0
 
           searchable_children = except ? children.reject { |node| node.namespaces == except.namespaces } : children
-          searchable_children.detect { |n| n.search_down(partial_namespaces) }
+          searchable_children.detect { |n| n.search_kinship(partial_namespaces, degree: degree - 1) }
         end
       end
     end
