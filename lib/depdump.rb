@@ -17,7 +17,7 @@ class Depdump
   def parse_files(files)
     tracer = Tracer.new
 
-    files.each do |file|
+    expand_directory(files).each do |file|
       source = File.read(file)
       ast = Parser::CurrentRuby.parse(source)
       tracer.trace_node(ast)
@@ -36,5 +36,17 @@ class Depdump
       nodes: graph.nodes.values,
       edges: graph.edges.to_a,
     }
+  end
+
+  private
+
+  def expand_directory(paths)
+    paths.flat_map do |path|
+      if File.directory?(path)
+        Dir.glob(File.join(path, "**", "*.rb"))
+      else
+        path
+      end
+    end
   end
 end
