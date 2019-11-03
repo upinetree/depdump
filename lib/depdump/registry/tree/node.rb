@@ -37,24 +37,21 @@ class Depdump
           end
         end
 
-        def resolve(partial_namespaces, except_node: nil)
-          found = search_kinship(partial_namespaces, except: except_node)
+        def dig(partial_namespaces)
+          found = nil
 
-          unless found
-            return nil unless parent
-            found = parent.resolve(partial_namespaces, except_node: self)
+          children.each do |node|
+            exactly_match = node.namespaces.last(partial_namespaces.size) == partial_namespaces
+            found = node and break if exactly_match
+
+            route_match = node.namespaces.last == partial_namespaces.first
+            if route_match
+              found = node.dig(partial_namespaces[1..-1])
+              break if found
+            end
           end
 
           found
-        end
-
-        def search_kinship(partial_namespaces, except: nil, degree: 1)
-          return self if partial_namespaces == namespaces.last(partial_namespaces.size)
-          return self if parent&.root? && partial_namespaces == namespaces # top level refenrece
-          return unless degree > 0
-
-          searchable_children = except ? children.reject { |node| node.namespaces == except.namespaces } : children
-          searchable_children.detect { |n| n.search_kinship(partial_namespaces, degree: degree - 1) }
         end
       end
     end

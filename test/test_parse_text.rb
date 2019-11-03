@@ -76,6 +76,7 @@ class TestParseText < MiniTest::Test
         def hello
           p 'hello, '
           A::B.new.world
+          B::C.new.say
         end
 
         class B
@@ -96,6 +97,7 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:A, :B], [:A, :B, :C]],
       edges: [
         { from: [:A], to: [:A, :B] },
+        { from: [:A], to: [:A, :B, :C] },
         { from: [:A, :B], to: [:A, :B, :C] },
       ],
     }

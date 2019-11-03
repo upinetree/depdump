@@ -10,8 +10,8 @@ class Depdump
           @search_entry_node = search_entry_node || node
         end
 
-        def resolve
-          resolved_node = @search_entry_node.resolve(reference)
+        def resolve(tree)
+          resolved_node = tree.resolve(reference, @search_entry_node)
           resolved_node&.namespaces
         end
       end

@@ -22,6 +22,19 @@ class Depdump
         return unless block_given?
         root.each { |node| yield node }
       end
+
+      def resolve(partial_namespaces, entry_node)
+        current_node = entry_node
+        prev_node = nil
+        resolved_node = nil
+
+        while current_node && resolved_node.nil?
+          resolved_node = current_node.dig(partial_namespaces)
+          prev_node, current_node = current_node, current_node&.parent
+        end
+
+        resolved_node
+      end
     end
   end
 end
