@@ -1,7 +1,7 @@
 require "minitest/autorun"
 require "depdump"
 
-class TestParseText < MiniTest::Unit::TestCase
+class TestParseText < MiniTest::Test
   def setup
     @client = ::Depdump.new
   end

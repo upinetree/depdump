@@ -1,7 +1,7 @@
 require "minitest/autorun"
 require "depdump"
 
-class TestRegistryTree < MiniTest::Unit::TestCase
+class TestRegistryTree < MiniTest::Test
   def test_find_or_create_node
     tree = Depdump::Registry::Tree.new
     tree.find_or_create_node([:A], tree.root)

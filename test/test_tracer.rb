@@ -1,7 +1,7 @@
 require "minitest/autorun"
 require "depdump"
 
-class TestTracer < MiniTest::Unit::TestCase
+class TestTracer < MiniTest::Test
   def setup
     @tracer = ::Depdump::Tracer.new
   end
