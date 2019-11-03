@@ -37,6 +37,17 @@ class Depdump
           end
         end
 
+        def resolve(partial_namespaces, except_node: nil)
+          found = search_kinship(partial_namespaces, except: except_node)
+
+          unless found
+            return nil unless parent
+            found = parent.resolve(partial_namespaces, except_node: self)
+          end
+
+          found
+        end
+
         def search_kinship(partial_namespaces, except: nil, degree: 1)
           return self if partial_namespaces == namespaces.last(partial_namespaces.size)
           return self if parent&.root? && partial_namespaces == namespaces # top level refenrece

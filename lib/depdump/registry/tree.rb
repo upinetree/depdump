@@ -22,18 +22,6 @@ class Depdump
         return unless block_given?
         root.each { |node| yield node }
       end
-
-      def resolve(partial_namespaces, entry_node, except_node: nil)
-        found = entry_node.search_kinship(partial_namespaces, except: except_node)
-
-        unless found
-          parent = entry_node.parent
-          return nil unless parent
-          found = resolve(partial_namespaces, parent, except_node: entry_node)
-        end
-
-        found
-      end
     end
   end
 end

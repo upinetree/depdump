@@ -16,7 +16,7 @@ class Depdump
 
         @nodes[node.key] ||= node.namespaces
         node.relations.each do |r|
-          referenced_namespaces = r.resolve(tree)
+          referenced_namespaces = r.resolve
           if referenced_namespaces
             @edges << { from: node.namespaces, to: referenced_namespaces }
           else
