@@ -10,7 +10,7 @@ class Depdump
 
       def find_or_create_node(namespaces, parent)
         # TODO: could be cached rather than search everytime
-        registered = root.detect { |node| parent.namespaces + namespaces == node.namespaces }
+        registered = root.detect { |node| namespaces == node.namespaces }
         return registered if registered
 
         Node.new(namespaces: namespaces, parent: parent).tap { |n|
