@@ -14,14 +14,14 @@ class Depdump
           @parent = parent
         end
 
-        def create_relation(reference)
-          Relation.new(node: self, reference: reference).tap { |r|
+        def create_relation(reference, search_entry_node: nil)
+          Relation.new(node: self, reference: reference, search_entry_node: search_entry_node).tap { |r|
             @relations << r
           }
         end
 
         def root?
-          parent.nil? && namespaces == [:Object]
+          parent.nil?
         end
 
         def key
@@ -39,7 +39,7 @@ class Depdump
 
         def search_kinship(partial_namespaces, except: nil, degree: 1)
           return self if partial_namespaces == namespaces.last(partial_namespaces.size)
-          return self if parent&.root? && partial_namespaces == ([:Object] + namespaces) # top level refenrece
+          return self if parent&.root? && partial_namespaces == namespaces # top level refenrece
           return unless degree > 0
 
           searchable_children = except ? children.reject { |node| node.namespaces == except.namespaces } : children

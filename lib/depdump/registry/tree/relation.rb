@@ -4,17 +4,14 @@ class Depdump
       class Relation
         attr_reader :node, :reference
 
-        def initialize(node:, reference:)
+        def initialize(node:, reference:, search_entry_node: nil)
           @node = node
-          @reference = retrieve_top_level(reference)
-        end
-
-        def retrieve_top_level(reference)
-          reference.map { |const| const || :Object }
+          @reference = reference
+          @search_entry_node = search_entry_node || node
         end
 
         def resolve(tree)
-          resolved_node = tree.resolve(reference, node)
+          resolved_node = tree.resolve(reference, @search_entry_node)
           resolved_node&.namespaces
         end
       end

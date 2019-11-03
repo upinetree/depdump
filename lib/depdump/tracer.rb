@@ -22,7 +22,12 @@ class Depdump
         end
       when :const
         referenced_namespaces = expand_const_namespaces(node, [])
-        @context.create_relation(referenced_namespaces)
+        if referenced_namespaces.first.nil?
+          # Top level nil is inserted when :cbase appeared
+          @context.create_relation(referenced_namespaces[1..-1], search_entry_node: @registry_tree.root)
+        else
+          @context.create_relation(referenced_namespaces)
+        end
       else
         node.children.map { |n| trace_node(n, namespaces) }
       end
