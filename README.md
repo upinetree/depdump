@@ -1,8 +1,8 @@
 # Depdump
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/depdump`. To experiment with that code, run `bin/console` for an interactive prompt.
+:construction: Still a work in progress, interfaces may be changed.
 
-TODO: Delete this and the text above, and describe your gem
+A dump tool of ruby class/module dependencies.
 
 ## Installation
 
@@ -22,7 +22,18 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Quick start:
+
+    $ cd my/cool/ruby/project
+    $ depdump
+
+Or, specify files and directories.
+
+    $ depdump lib/greate_module.rb app
+
+Then, the dependency graph appeared as a JSON string in stdout.
+
+And some execution warnings are written in `depdump-error.log`.
 
 ## Development
 
@@ -32,7 +43,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/depdump. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/upinetree/depdump. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
