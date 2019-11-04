@@ -7,7 +7,7 @@ require_relative "depdump/version"
 
 require "parser/current"
 
-class Depdump
+module Depdump
   include Configurable
 
   class Cli

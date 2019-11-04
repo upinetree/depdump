@@ -1,6 +1,6 @@
 require "json"
 
-class Depdump
+module Depdump
   class DependencyGraph
     attr_reader :nodes, :edges
 

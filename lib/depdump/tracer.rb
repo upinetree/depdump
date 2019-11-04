@@ -1,4 +1,4 @@
-class Depdump
+module Depdump
   class Tracer
     attr_reader :classes, :relations, :registry_tree
 

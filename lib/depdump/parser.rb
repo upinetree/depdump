@@ -1,4 +1,4 @@
-class Depdump
+module Depdump
   class Parser
     attr_reader :tracer
 

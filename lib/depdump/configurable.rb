@@ -1,4 +1,4 @@
-class Depdump
+module Depdump
   module Configurable
     def self.included(base)
       base.extend(ClassMethods)

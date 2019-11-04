@@ -1,4 +1,4 @@
-class Depdump
+module Depdump
   class Registry
     class Tree
       class Relation
