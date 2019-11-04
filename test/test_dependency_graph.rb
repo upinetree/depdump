@@ -1,13 +1,22 @@
 require "minitest/autorun"
 require "depdump"
 
-class TestParseText < MiniTest::Test
-  def setup
-    @client = ::Depdump.new
+class TesteDependencyGraph < MiniTest::Test
+  def build_dependency_graph(source)
+    tracer = Depdump::Tracer.new
+    ast = ::Parser::CurrentRuby.parse(source)
+    tracer.trace_node(ast)
+
+    graph = Depdump::DependencyGraph.new(tracer.registry_tree)
+
+    {
+      nodes: graph.nodes.values,
+      edges: graph.edges.to_a,
+    }
   end
 
   def test_blank_class
-    @source = <<~SRC
+    source = <<~SRC
       class A
       end
     SRC
@@ -16,11 +25,11 @@ class TestParseText < MiniTest::Test
       nodes: [[:A]],
       edges: [],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_flat_relation_classes
-    @source = <<~SRC
+    source = <<~SRC
       class A
         def hello
           p 'hello, '
@@ -39,11 +48,11 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_reopened_class
-    @source = <<~SRC
+    source = <<~SRC
       class A
         def hoge
           B.new
@@ -67,11 +76,11 @@ class TestParseText < MiniTest::Test
         { from: [:A], to: [:C] },
       ],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_nested_class
-    @source = <<~SRC
+    source = <<~SRC
       class A
         def hello
           p 'hello, '
@@ -101,11 +110,11 @@ class TestParseText < MiniTest::Test
         { from: [:A, :B], to: [:A, :B, :C] },
       ],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_qualified_class
-    @source = <<~SRC
+    source = <<~SRC
       class A
         def hello
           p 'hello, '
@@ -124,11 +133,11 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:A, :B, :C]],
       edges: [{ from: [:A], to: [:A, :B, :C] }],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_class_qualified_with_module
-    @source = <<~SRC
+    source = <<~SRC
       module A
         def hello
           p 'hello, '
@@ -147,11 +156,11 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:A, :B, :C]],
       edges: [{ from: [:A], to: [:A, :B, :C] }],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_refenrence_of_top_level_const
-    @source = <<~SRC
+    source = <<~SRC
       module A
         def hello
           ::B.new
@@ -166,11 +175,11 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:A, :B], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_included_module
-    @source = <<~SRC
+    source = <<~SRC
       module A
         include B
       end
@@ -181,11 +190,11 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_extended_class
-    @source = <<~SRC
+    source = <<~SRC
       module A
         extend B
       end
@@ -196,11 +205,11 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_inheritance
-    @source = <<~SRC
+    source = <<~SRC
       class A
       end
       class A::B < A
@@ -211,11 +220,11 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:A, :B]],
       edges: [{ from: [:A, :B], to: [:A] }],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   def test_class_level_references
-    @source = <<~SRC
+    source = <<~SRC
       class A
         B.new
       end
@@ -226,13 +235,13 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 
   # TODO: This is just a limitation. For resolve this problem,
   #       Tracer should have functionality of handling :casgn expression
   def test_const_definition_isnt_supported
-    @source = <<~SRC
+    source = <<~SRC
       class A
         B = 1
       end
@@ -245,6 +254,6 @@ class TestParseText < MiniTest::Test
       nodes: [[:A], [:C]],
       edges: [],
     }
-    assert_equal expected, @client.parse_string(@source)
+    assert_equal expected, build_dependency_graph(source)
   end
 end

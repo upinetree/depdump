@@ -16,4 +16,4 @@ Depdump.configure do |c|
 end
 
 files = ARGV.empty? ? ["."] : ARGV
-Depdump.new.run(files)
+Depdump::Cli.run(files)
