@@ -10,7 +10,7 @@ class TesteDependencyGraph < MiniTest::Test
     graph = Depdump::DependencyGraph.new(tracer.registry_tree)
 
     {
-      nodes: graph.nodes.values,
+      nodes: graph.nodes.map(&:namespaces),
       edges: graph.edges.to_a,
     }
   end
@@ -173,6 +173,27 @@ class TesteDependencyGraph < MiniTest::Test
 
     expected = {
       nodes: [[:A], [:A, :B], [:B]],
+      edges: [{ from: [:A], to: [:B] }],
+    }
+    assert_equal expected, build_dependency_graph(source)
+  end
+
+  def test_top_level_const_difinition_in_lazy
+    source = <<~SRC
+      module A
+        after_initialize do
+          class ::B
+          end
+        end
+
+        def b
+          B.new
+        end
+      end
+    SRC
+
+    expected = {
+      nodes: [[:A], [:B]],
       edges: [{ from: [:A], to: [:B] }],
     }
     assert_equal expected, build_dependency_graph(source)

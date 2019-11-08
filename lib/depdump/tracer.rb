@@ -17,6 +17,13 @@ module Depdump
         # definition_node.type should be :const (otherwise syntax error occurs)
         defined_namespaces = expand_const_namespaces(definition_node, namespaces)
 
+        # Assume as top level definition is the rest of the array after last nil (cbase) appeared
+        # e.g.) [nil, :A, nil, :B] => [:B]
+        if cbase_index = defined_namespaces.rindex(nil)
+          namespaces_size_from_top = defined_namespaces.size - (cbase_index + 1)
+          defined_namespaces = defined_namespaces.last(namespaces_size_from_top)
+        end
+
         stack_context(defined_namespaces) do
           node.children[1..-1].each { |n| trace_node(n, defined_namespaces) }
         end

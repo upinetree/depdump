@@ -5,7 +5,7 @@ module Depdump
     attr_reader :nodes, :edges
 
     def initialize(tree)
-      @nodes = {}
+      @nodes = Set.new
       @edges = Set.new
       build(tree)
     end
@@ -14,7 +14,7 @@ module Depdump
       tree.each_node do |node|
         next if node == tree.root
 
-        @nodes[node.key] ||= node.namespaces
+        @nodes << node
         node.relations.each do |r|
           referenced_namespaces = r.resolve(tree)
           if referenced_namespaces
@@ -29,7 +29,7 @@ module Depdump
 
     def format
       JSON.dump({
-        nodes: nodes.values,
+        nodes: nodes.map(&:namespaces),
         edges: edges.to_a,
       })
     end

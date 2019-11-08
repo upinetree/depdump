@@ -24,8 +24,12 @@ module Depdump
           parent.nil?
         end
 
-        def key
-          namespaces.map(&:downcase).join("/")
+        def hash
+          namespaces.hash
+        end
+
+        def eql?(other)
+          namespaces == other.namespaces
         end
 
         def each(&block)
