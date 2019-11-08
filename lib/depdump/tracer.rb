@@ -12,35 +12,44 @@ module Depdump
 
       case node.type
       when :class, :module
-        definition_node = node.children.first
-
-        # definition_node.type should be :const (otherwise syntax error occurs)
-        defined_namespaces = expand_const_namespaces(definition_node, namespaces)
-
-        # Assume as top level definition is the rest of the array after last nil (cbase) appeared
-        # e.g.) [nil, :A, nil, :B] => [:B]
-        if cbase_index = defined_namespaces.rindex(nil)
-          namespaces_size_from_top = defined_namespaces.size - (cbase_index + 1)
-          defined_namespaces = defined_namespaces.last(namespaces_size_from_top)
-        end
-
-        stack_context(defined_namespaces) do
-          node.children[1..-1].each { |n| trace_node(n, defined_namespaces) }
-        end
+        trace_class(node, namespaces)
       when :const
-        referenced_namespaces = expand_const_namespaces(node, [])
-        if referenced_namespaces.first.nil?
-          # Top level nil is inserted when :cbase appeared
-          @context.create_relation(referenced_namespaces[1..-1], search_entry_node: @registry_tree.root)
-        else
-          @context.create_relation(referenced_namespaces)
-        end
+        trace_const(node, namespaces)
       else
         node.children.map { |n| trace_node(n, namespaces) }
       end
     end
 
     private
+
+    def trace_class(node, namespaces)
+      definition_node = node.children.first
+
+      # definition_node.type should be :const (otherwise syntax error occurs)
+      defined_namespaces = expand_const_namespaces(definition_node, namespaces)
+
+      # Assume as top level definition is the rest of the array after last nil (cbase) appeared
+      # e.g.) [nil, :A, nil, :B] => [:B]
+      if cbase_index = defined_namespaces.rindex(nil)
+        namespaces_size_from_top = defined_namespaces.size - (cbase_index + 1)
+        defined_namespaces = defined_namespaces.last(namespaces_size_from_top)
+      end
+
+      stack_context(defined_namespaces) do
+        node.children[1..-1].each { |n| trace_node(n, defined_namespaces) }
+      end
+    end
+
+    def trace_const(node, namespaces)
+      referenced_namespaces = expand_const_namespaces(node, [])
+
+      if referenced_namespaces.first.nil?
+        # Top level nil is inserted when :cbase appeared
+        @context.create_relation(referenced_namespaces[1..-1], search_entry_node: @registry_tree.root)
+      else
+        @context.create_relation(referenced_namespaces)
+      end
+    end
 
     def stack_context(namespaces)
       prev_context = @context
