@@ -25,7 +25,7 @@ module Depdump
 
       def initialize
         @output = $stdout
-        @format = Depdump::DependencyGraph::Formatter::Json.new
+        @formatter = Depdump::DependencyGraph::Formatter::Json.new
       end
 
       def formatter=(type)
