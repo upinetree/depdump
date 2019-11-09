@@ -32,7 +32,7 @@ Quick start:
 
 Or, specify files and directories.
 
-    $ depdump lib/greate_module.rb app
+    $ depdump lib/great_module.rb app
 
 Then, the dependency graph appeared as a JSON string in stdout.
 
@@ -49,7 +49,9 @@ Then, the dependency graph appeared as a JSON string in stdout.
       ]
     }
 
-And some execution warnings are written in `depdump-error.log`.
+And some execution warnings and errors are written in `depdump-error.log`.
+
+Additionaly, option `-o [output file]` and `-f [format json/table]` are available.
 
 ## Development
 
