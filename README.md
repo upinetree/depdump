@@ -4,6 +4,9 @@
 
 A dump tool of ruby class/module dependencies.
 
+- It aims to dump all static dependencies
+- Dynamic referencing by metaprogramming is not supported
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -32,6 +35,19 @@ Or, specify files and directories.
     $ depdump lib/greate_module.rb app
 
 Then, the dependency graph appeared as a JSON string in stdout.
+
+    {
+      "nodes": [
+        ["A"],
+        ["A", "B"]
+      ],
+      "edges": [
+        {
+          "from": ["A"],
+          "to": ["A", "B"]
+        }
+      ]
+    }
 
 And some execution warnings are written in `depdump-error.log`.
 
