@@ -4,8 +4,7 @@ module Depdump
       class Node
         include Enumerable
 
-        attr_accessor :namespaces
-        attr_reader :children, :parent, :relations
+        attr_reader :namespaces, :children, :parent, :relations
 
         def initialize(namespaces: [], parent:)
           @namespaces = namespaces
