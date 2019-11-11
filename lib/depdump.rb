@@ -5,6 +5,7 @@ require_relative "depdump/registry"
 require_relative "depdump/tracer"
 require_relative "depdump/version"
 
+require "set"
 require "parser/current"
 
 module Depdump
