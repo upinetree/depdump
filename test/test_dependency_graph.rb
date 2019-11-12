@@ -1,7 +1,7 @@
 require "minitest/autorun"
 require "depdump"
 
-class TesteDependencyGraph < MiniTest::Test
+class TestDependencyGraph < MiniTest::Test
   def build_dependency_graph(source)
     tracer = Depdump::Tracer.new
     ast = ::Parser::CurrentRuby.parse(source)
