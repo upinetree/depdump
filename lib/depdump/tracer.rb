@@ -30,6 +30,7 @@ module Depdump
 
       # Assume as top level definition is the rest of the array after last nil (cbase) appeared
       # e.g.) [nil, :A, nil, :B] => [:B]
+      # see https://github.com/upinetree/depdump/commit/3201c342b77520b407bcd63e62145ced44ef3d89
       if cbase_index = defined_namespaces.rindex(nil)
         namespaces_size_from_top = defined_namespaces.size - (cbase_index + 1)
         defined_namespaces = defined_namespaces.last(namespaces_size_from_top)
