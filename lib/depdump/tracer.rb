@@ -16,7 +16,7 @@ module Depdump
       when :const
         trace_const(node, namespaces)
       else
-        node.children.map { |n| trace_node(n, namespaces) }
+        node.children.each { |n| trace_node(n, namespaces) }
       end
     end
 
