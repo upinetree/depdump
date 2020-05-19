@@ -13,8 +13,7 @@ module Depdump
 
   class Cli
     def self.run(files)
-      parser = Depdump::Parser.new.tap { |p| p.parse(files) }
-      graph = parser.dependency_graph
+      graph = Depdump::Parser.new.then { |p| p.parse(files) }
       Depdump.config.output.write(graph.format)
     end
   end

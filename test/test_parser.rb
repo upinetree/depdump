@@ -1,7 +1,7 @@
 require "minitest/autorun"
 require "depdump"
 
-class TesteParser < MiniTest::Test
+class TestParser < MiniTest::Test
   def setup
     @parser = Depdump::Parser.new
   end
@@ -12,14 +12,9 @@ class TesteParser < MiniTest::Test
     end
   end
 
-  def parse_and_generate_graph(files)
-    @parser.parse(files)
-    @parser.dependency_graph
-  end
-
   def test_parse_multiple_files
     files = fixture_path("flat_relation_classes.rb", "nested_classes.rb")
-    graph = parse_and_generate_graph(files)
+    graph = @parser.parse(files)
 
     expected_nodes = [
       [:FlatRelationA],
@@ -38,7 +33,8 @@ class TesteParser < MiniTest::Test
   end
 
   def test_parse_directory
-    graph = parse_and_generate_graph(fixture_path("dir"))
+    files = fixture_path("dir")
+    graph = @parser.parse(files)
 
     expected_nodes = [
       [:DirContentA],

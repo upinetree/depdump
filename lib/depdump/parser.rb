@@ -10,9 +10,7 @@ module Depdump
         ast = ::Parser::CurrentRuby.parse(source)
         @tracer.trace_node(ast)
       end
-    end
 
-    def dependency_graph
       DependencyGraph.new(@tracer.registry_tree)
     end
 
