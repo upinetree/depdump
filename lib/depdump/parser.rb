@@ -1,7 +1,5 @@
 module Depdump
   class Parser
-    attr_reader :tracer
-
     def initialize
       @tracer = Tracer.new
     end
@@ -10,12 +8,12 @@ module Depdump
       expand_directory(files).each do |file|
         source = File.read(file)
         ast = ::Parser::CurrentRuby.parse(source)
-        tracer.trace_node(ast)
+        @tracer.trace_node(ast)
       end
     end
 
     def dependency_graph
-      DependencyGraph.new(tracer.registry_tree)
+      DependencyGraph.new(@tracer.registry_tree)
     end
 
     private
