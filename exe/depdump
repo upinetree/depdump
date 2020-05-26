@@ -9,11 +9,12 @@ $stderr.reopen("depdump-error.log", "w")
 require "depdump"
 require "optparse"
 
-options = ARGV.getopts("o:", "f:")
+options = ARGV.getopts("o:f:s")
 
 Depdump.configure do |c|
   c.output = File.open(options["o"], "w") if options["o"]
   c.formatter = options["f"] if options["f"]
+  c.strict = true if options["s"]
 end
 
 files = ARGV.empty? ? ["."] : ARGV

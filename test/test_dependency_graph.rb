@@ -259,9 +259,35 @@ class TestDependencyGraph < MiniTest::Test
     assert_equal expected, build_dependency_graph(source)
   end
 
+  def test_configuration_for_unresolvable_cosntant
+    source = <<~SRC
+      class A
+        UnresolvableConst.hello
+      end
+    SRC
+
+    expected = {
+      nodes: [[:A]],
+      edges: [{ from: [:A], to: [:UnresolvableConst] }],
+    }
+    assert_equal expected, build_dependency_graph(source)
+
+    Depdump.configure { |c| c.strict = true }
+
+    expected = {
+      nodes: [[:A]],
+      edges: [],
+    }
+    assert_equal expected, build_dependency_graph(source)
+
+    Depdump.configure { |c| c.strict = false }
+  end
+
   # TODO: This is just a limitation. For resolve this problem,
   #       Tracer should have functionality of handling :casgn expression
   def test_const_definition_isnt_supported
+    Depdump.configure { |c| c.strict = true }
+
     source = <<~SRC
       class A
         B = 1
@@ -276,5 +302,7 @@ class TestDependencyGraph < MiniTest::Test
       edges: [],
     }
     assert_equal expected, build_dependency_graph(source)
+
+    Depdump.configure { |c| c.strict = false }
   end
 end

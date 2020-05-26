@@ -20,8 +20,12 @@ module Depdump
           if referenced_namespaces
             @edges << { from: node.namespaces, to: referenced_namespaces }
           else
-            # TODO: Show file path and line no.
-            warn "[skip] cannot resolve: #{node.namespaces} => #{r.reference}"
+            if allow_unresolvable_constant?
+              @edges << { from: node.namespaces, to: r.reference }
+            else
+              # TODO: Show file path and line no.
+              warn "[skip] cannot resolve: #{node.namespaces} => #{r.reference}"
+            end
           end
         end
       end
@@ -29,6 +33,12 @@ module Depdump
 
     def format
       Depdump.config.formatter.call(nodes, edges)
+    end
+
+    private
+
+    def allow_unresolvable_constant?
+      Depdump.config.strict == false
     end
 
     module Formatter

@@ -20,12 +20,13 @@ module Depdump
     end
 
     class Configuration
-      attr_accessor :output
+      attr_accessor :output, :strict
       attr_reader :formatter
 
       def initialize
         @output = $stdout
         @formatter = Depdump::DependencyGraph::Formatter::Json.new
+        @strict = false
       end
 
       def formatter=(type)
